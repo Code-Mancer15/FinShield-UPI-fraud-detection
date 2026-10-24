@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinShield — Payment Fraud Protection</title>
+  <link rel="stylesheet" href="/static/styles.css?v=2.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-name">FinShield</h1>
+        <span class="brand-tagline">Real-Time Payment Protection</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span class="status-label">Protection Active</span>
+      </div>
+      <button id="btn-toggle-metrics" class="btn-subtle" title="View Machine Learning Accuracy Stats">
+        <span>Model Accuracy</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Model Accuracy Drawer/Banner (Collapsible for Cleanliness) -->
+  <div id="model-metrics-panel" class="metrics-drawer hidden">
+    <div class="drawer-inner">
+      <div class="drawer-header">
+        <h3>Model Accuracy & Benchmark</h3>
+        <button id="btn-close-metrics" class="btn-icon">&times;</button>
+      </div>
+      <div class="drawer-stats">
+        <div class="drawer-stat">
+          <span class="stat-title">Detection Precision</span>
+          <span class="stat-number" id="stat-precision">100%</span>
+          <span class="stat-desc">Reliability on flagged alerts</span>
+        </div>
+        <div class="drawer-stat">
+          <span class="stat-title">Fraud Recall</span>
+          <span class="stat-number" id="stat-recall">100%</span>
+          <span class="stat-desc">Actual fraud attempts caught</span>
+        </div>
+        <div class="drawer-stat">
+          <span class="stat-title">Model F1 Score</span>
+          <span class="stat-number" id="stat-f1">1.00</span>
+          <span class="stat-desc">Balanced performance rating</span>
+        </div>
+        <div class="drawer-stat">
+          <span class="stat-title">Baseline Comparison</span>
+          <span class="stat-number text-accent" id="stat-fnr-reduction">Active</span>
+          <span class="stat-desc">XGBoost & Isolation Forest Ensemble</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="dashboard-shell">
+
+    <!-- KPI Summary Row -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-title">Total Payments Scored</span>
+        <div class="kpi-value" id="stat-total-txns">--</div>
+        <span class="kpi-meta">Real-time pipeline volume</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Approval Rate</span>
+        <div class="kpi-value text-success" id="stat-approved-rate">--%</div>
+        <span class="kpi-meta">Low-risk automated approvals</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Flagged for Review</span>
+        <div class="kpi-value text-warning" id="stat-flagged-pct">--%</div>
+        <span class="kpi-meta" id="stat-flagged-count">-- payments challenged</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-title">Average Risk Level</span>
+        <div class="kpi-value text-info" id="stat-avg-risk">--</div>
+        <span class="kpi-meta">Average score across payments</span>
+      </div>
+    </section>
+
+    <!-- Main Workspace Split -->
+    <div class="workspace-grid">
+
+      <!-- Left Column: Test Payment Simulator -->
+      <section class="card simulator-card">
+        <div class="card-header">
+          <div>
+            <h2>Test a Payment</h2>
+            <p class="card-desc">Simulate a transaction to see immediate risk scoring and reasons.</p>
+          </div>
+        </div>
+
+        <!-- Preset Scenarios -->
+        <div class="form-group">
+          <label for="preset-selector">Quick Sample Scenarios</label>
+          <select id="preset-selector" class="form-select">
+            <option value="">-- Choose a realistic scenario --</option>
+          </select>
+        </div>
+
+        <form id="simulator-form" class="sim-form">
+          <!-- Customer Selection -->
+          <div class="form-group">
+            <label for="input-customer">Customer</label>
+            <select id="input-customer" class="form-select" required>
+              <option value="">Loading customer accounts...</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="input-amount">Amount (INR ₹)</label>
+              <input type="number" step="0.01" id="input-amount" class="form-input" value="450.00" required>
+            </div>
+            <div class="form-group">
+              <label for="input-merchant">Store / Merchant</label>
+              <select id="input-merchant" class="form-select">
+                <option value="">Loading merchants...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="input-device-type">Device</label>
+              <select id="input-device-type" class="form-select">
+                <option value="trusted">Customer's Trusted Phone</option>
+                <option value="unrecognized">New / Unrecognized Device (Suspicious)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input-location">Payment Location (City)</label>
+              <input type="text" id="input-location" class="form-input" value="Mumbai" required>
+            </div>
+          </div>
+
+          <input type="hidden" id="input-user" value="USR_0001">
+          <input type="hidden" id="input-device" value="DEV_USR_0001_01">
+          <input type="hidden" id="input-timestamp" value="">
+
+          <button type="submit" class="btn btn-primary" id="btn-score">
+            <span>Check Payment Risk</span>
+          </button>
+        </form>
+
+        <!-- Live Score Output -->
+        <div id="sim-result-box" class="result-box hidden">
+          <div class="result-top">
+            <div class="decision-badge" id="res-decision-badge">Approved</div>
+            <div class="result-risk">
+              <span class="risk-label">Calculated Risk</span>
+              <span class="risk-percentage" id="res-risk-pct">0%</span>
+            </div>
+          </div>
+
+          <div class="result-factors">
+            <h4>Risk Signals & Attribution</h4>
+            <div id="res-factors-list" class="factors-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Recent Payments Table -->
+      <section class="card table-card">
+        <div class="card-header table-header">
+          <div>
+            <h2>Recent Payments</h2>
+            <p class="card-desc">Live log of scored transactions and outcomes.</p>
+          </div>
+
+          <div class="table-filter">
+            <select id="filter-risk" class="form-select filter-select">
+              <option value="ALL">All Outcomes</option>
+              <option value="ALLOW">Approved (Low Risk)</option>
+              <option value="STEP_UP_AUTH">Needs Verification (OTP)</option>
+              <option value="BLOCK">Declined (High Risk)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Store / Destination</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Risk Level</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="txns-table-body">
+              <tr>
+                <td colspan="8" class="text-center py-6">Loading payments...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Payment Detail Modal -->
+  <div id="detail-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <div>
+          <h3 id="modal-title">Payment Details</h3>
+          <span class="modal-meta" id="modal-timestamp">Timestamp</span>
+        </div>
+        <button class="btn-icon" id="btn-close-modal">&times;</button>
+      </div>
+
+      <div class="modal-content">
+        <!-- Status summary banner -->
+        <div class="summary-banner">
+          <div class="banner-item">
+            <span class="banner-title">Decision</span>
+            <span class="status-pill" id="modal-decision">Approved</span>
+          </div>
+          <div class="banner-item">
+            <span class="banner-title">Amount</span>
+            <span class="banner-val" id="modal-amount">₹0.00</span>
+          </div>
+          <div class="banner-item">
+            <span class="banner-title">Risk Assessment</span>
+            <span class="banner-val" id="modal-risk-pct">0%</span>
+          </div>
+        </div>
+
+        <div class="modal-columns">
+          <!-- Customer & Payment Info -->
+          <div class="info-group">
+            <h4>Payment Information</h4>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="info-label">Customer Name</span>
+                <span class="info-value" id="modal-user-name">--</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Customer ID</span>
+                <span class="info-value text-muted" id="modal-user-id">--</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Home City</span>
+                <span class="info-value" id="modal-home-city">--</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Payment Location</span>
+                <span class="info-value" id="modal-location">--</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Store / Merchant</span>
+                <span class="info-value" id="modal-merchant">--</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Device Used</span>
+                <span class="info-value text-muted" id="modal-device">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Breakdown -->
+          <div class="factors-group">
+            <h4>Risk Factors Breakdown</h4>
+            <p class="factors-desc">Specific signals that contributed to the automated risk rating.</p>
+            <div id="modal-factors-list" class="factors-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=2.0"></script>
+</body>
+</html>

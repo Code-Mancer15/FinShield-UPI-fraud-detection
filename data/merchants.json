@@ -1,0 +1,122 @@
+[
+  {
+    "id": "MERCH_001",
+    "name": "Swiggy",
+    "category": "Food",
+    "risk_weight": 0.1
+  },
+  {
+    "id": "MERCH_002",
+    "name": "Zomato",
+    "category": "Food",
+    "risk_weight": 0.1
+  },
+  {
+    "id": "MERCH_003",
+    "name": "Amazon Pay",
+    "category": "Retail",
+    "risk_weight": 0.2
+  },
+  {
+    "id": "MERCH_004",
+    "name": "Flipkart",
+    "category": "Retail",
+    "risk_weight": 0.2
+  },
+  {
+    "id": "MERCH_005",
+    "name": "Uber UPI",
+    "category": "Travel",
+    "risk_weight": 0.15
+  },
+  {
+    "id": "MERCH_006",
+    "name": "Ola Cabs",
+    "category": "Travel",
+    "risk_weight": 0.15
+  },
+  {
+    "id": "MERCH_007",
+    "name": "BigBasket",
+    "category": "Grocery",
+    "risk_weight": 0.1
+  },
+  {
+    "id": "MERCH_008",
+    "name": "Reliance Smart",
+    "category": "Grocery",
+    "risk_weight": 0.1
+  },
+  {
+    "id": "MERCH_009",
+    "name": "D-Mart UPI",
+    "category": "Grocery",
+    "risk_weight": 0.1
+  },
+  {
+    "id": "MERCH_010",
+    "name": "HPCL Petrol Pump",
+    "category": "Fuel",
+    "risk_weight": 0.2
+  },
+  {
+    "id": "MERCH_011",
+    "name": "Indian Oil Petrol",
+    "category": "Fuel",
+    "risk_weight": 0.2
+  },
+  {
+    "id": "MERCH_012",
+    "name": "Local Kirana Store",
+    "category": "Retail",
+    "risk_weight": 0.05
+  },
+  {
+    "id": "MERCH_013",
+    "name": "Tea & Snacks Corner",
+    "category": "Food",
+    "risk_weight": 0.05
+  },
+  {
+    "id": "MERCH_014",
+    "name": "Croma Electronics",
+    "category": "Electronics",
+    "risk_weight": 0.6
+  },
+  {
+    "id": "MERCH_015",
+    "name": "Vijay Sales",
+    "category": "Electronics",
+    "risk_weight": 0.6
+  },
+  {
+    "id": "MERCH_016",
+    "name": "Tanishq Jewelry",
+    "category": "Jewelry",
+    "risk_weight": 0.85
+  },
+  {
+    "id": "MERCH_017",
+    "name": "Kalyan Jewellers",
+    "category": "Jewelry",
+    "risk_weight": 0.85
+  },
+  {
+    "id": "MERCH_018",
+    "name": "P2P Contact Transfer",
+    "category": "P2P",
+    "risk_weight": 0.3
+  },
+  {
+    "id": "MERCH_019",
+    "name": "Self Account Transfer",
+    "category": "P2P",
+    "risk_weight": 0.05
+  },
+  {
+    "id": "MERCH_020",
+    "name": "International Remittance",
+    "category": "P2P",
+    "risk_weight": 0.75
+  }
+]

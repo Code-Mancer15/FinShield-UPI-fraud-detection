@@ -1,0 +1,34 @@
+{
+  "dataset": {
+    "total_samples": 25000,
+    "train_samples": 20000,
+    "test_samples": 5000,
+    "fraud_count_test": 175
+  },
+  "baseline_rule": {
+    "tp": 175,
+    "fp": 7,
+    "tn": 4818,
+    "fn": 0,
+    "precision": 0.9615,
+    "recall": 1.0,
+    "f1_score": 0.9804,
+    "false_positive_rate": 0.0015,
+    "false_negative_rate": 0.0
+  },
+  "finshield_ensemble": {
+    "tp": 175,
+    "fp": 0,
+    "tn": 4825,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0
+  },
+  "improvements": {
+    "fnr_reduction_pct": 0.0,
+    "f1_gain": 0.0196
+  }
+}
